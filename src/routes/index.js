@@ -1,13 +1,14 @@
 import RequireAuth from "Helpers/requreAuth";
 import MainLayout from "layout/MainLayout";
-import { Navigate, Route, Routes, useRoutes } from "react-router-dom";
-import Dashboard from "views/dashboard/Default";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Account from "views/account";
 
 // routes
 // import MainRoutes from "./MainRoutes";
 // import AuthenticationRoutes from "./AuthenticationRoutes";
 import Login from "views/pages/authentication/authentication/Login";
 import Register from "views/pages/authentication/authentication/Register";
+import Proflie from "views/profile";
 
 // ==============================|| ROUTING RENDER ||============================== //
 
@@ -24,7 +25,8 @@ export default function ThemeRoutes() {
         }
       >
         <Route exact path="/" element={<h1>Dashboard</h1>} />
-        {/* <Route exact path="/dashboard" element={<Dashboard />} /> */}
+        <Route exact path="/profile" element={<Proflie />} />
+        <Route exact path="/account" element={<Account />} />
       </Route>
       <Route exact path="/login" element={<Login />} />
       <Route exact path="/register" element={<Register />} />

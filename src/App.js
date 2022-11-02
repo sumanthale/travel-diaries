@@ -12,7 +12,7 @@ import themes from "themes";
 // project imports
 import NavigationScroll from "layout/NavigationScroll";
 import { AuthProvider } from "context/AuthContext";
-
+import "./style.scss";
 // ==============================|| APP ||============================== //
 
 const App = () => {

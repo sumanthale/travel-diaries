@@ -9,9 +9,9 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase";
-import { signOutUser } from "../Helpers/Login";
+// import { signOutUser } from "../Helpers/Login";
 import Loader from "ui-component/Loader";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export const AuthContext = React.createContext();
 
@@ -22,8 +22,8 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const timeout = useRef();
-
   function signUp(email, password) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -114,8 +114,7 @@ export const AuthProvider = ({ children }) => {
         setUser(user);
         // setUser(user); // will set the user and all the useEffect's will use this user
         // getUserDetails(user);
-        console.log(user.email);
-        navigate("/");
+        navigate(location.pathname);
       } else {
         setIsAuthenticated(false);
 

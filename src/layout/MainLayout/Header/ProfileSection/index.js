@@ -8,37 +8,29 @@ import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
   Box,
-  Card,
-  CardContent,
   Chip,
   ClickAwayListener,
-  Divider,
-  Grid,
-  InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
   Paper,
   Popper,
   Stack,
-  Switch,
   Typography,
 } from "@mui/material";
 
 // third-party
-import PerfectScrollbar from "react-perfect-scrollbar";
 
 // project imports
 import MainCard from "ui-component/cards/MainCard";
 import Transitions from "ui-component/extended/Transitions";
-import UpgradePlanCard from "./UpgradePlanCard";
 import User1 from "assets/images/users/user-round.svg";
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from "@tabler/icons";
 import { AuthContext } from "context/AuthContext";
+import { Person2Outlined } from "@mui/icons-material";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -47,7 +39,7 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
 
-  const { signOutUser } = useContext(AuthContext);
+  const { signOutUser, user } = useContext(AuthContext);
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
@@ -66,14 +58,6 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  const handleListItemClick = (event, index, route = "") => {
-    setSelectedIndex(index);
-    handleClose(event);
-
-    if (route && route !== "") {
-      navigate(route);
-    }
-  };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -167,21 +151,16 @@ const ProfileSection = () => {
                   shadow={theme.shadows[16]}
                 >
                   <Box sx={{ p: 2 }}>
-                    <Stack>
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Good Morning,</Typography>
-                        <Typography
-                          component="span"
-                          variant="h4"
-                          sx={{ fontWeight: 400 }}
-                        >
-                          Johne Doe
-                        </Typography>
-                      </Stack>
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+                      <Typography variant="h4">Hello,</Typography>
+                      <Typography
+                        component="span"
+                        variant="h4"
+                        sx={{ fontWeight: 400 }}
+                      >
+                        {user.email}
+                      </Typography>
                     </Stack>
-                  </Box>
-
-                  <Box sx={{ p: 2 }}>
                     <List
                       component="nav"
                       sx={{
@@ -200,13 +179,11 @@ const ProfileSection = () => {
                           borderRadius: `${customization.borderRadius}px`,
                         }}
                         selected={selectedIndex === 0}
-                        onClick={(event) =>
-                          handleListItemClick(
-                            event,
-                            0,
-                            "/user/account-profile/profile1"
-                          )
-                        }
+                        onClick={(event) => {
+                          handleClose(event);
+
+                          navigate("/account");
+                        }}
                       >
                         <ListItemIcon>
                           <IconSettings stroke={1.5} size="1.3rem" />
@@ -219,7 +196,28 @@ const ProfileSection = () => {
                           }
                         />
                       </ListItemButton>
+                      <ListItemButton
+                        sx={{
+                          borderRadius: `${customization.borderRadius}px`,
+                        }}
+                        selected={selectedIndex === 0}
+                        onClick={(event) => {
+                          handleClose(event);
 
+                          navigate("/profile");
+                        }}
+                      >
+                        <ListItemIcon>
+                          <Person2Outlined size="1.3rem" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography variant="body2">
+                              Profile Settings
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
                       <ListItemButton
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
