@@ -1,70 +1,101 @@
 // material-ui
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   FormControl,
   FormHelperText,
   Grid,
-  IconButton,
-  InputAdornment,
   InputLabel,
-  MenuItem,
+  LinearProgress,
   OutlinedInput,
   Paper,
-  Select,
-  TextField,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { AuthContext } from "context/AuthContext";
+import { storage } from "../../firebase/firebase";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { Formik } from "formik";
-import Countrystatecity from "Helpers/CountryStateCity";
 import useScriptRef from "hooks/useScriptRef";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useRef } from "react";
 import { useContext } from "react";
 import AnimateButton from "ui-component/extended/AnimateButton";
-import { strengthColor, strengthIndicator } from "utils/password-strength";
 import * as Yup from "yup";
+import { useEffect } from "react";
+import { updateUserData } from "api/api";
 
 // project imports
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Proflie = () => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const theme = useTheme();
   const scriptedRef = useScriptRef();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
-  const [showPassword, setShowPassword] = useState(false);
+  const [imageURl, setImageURl] = useState(user?.photoUrl || "");
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const inputRef = useRef(null);
 
-  const [strength, setStrength] = useState(0);
-  const [level, setLevel] = useState();
-  const { signUp, error, googleSignIn } = useContext(AuthContext);
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const changePassword = (value) => {
-    const temp = strengthIndicator(value);
-    setStrength(temp);
-    setLevel(strengthColor(temp));
-  };
-  const handelFormSubmit = ({ email, password }) => {
-    signUp(email, password);
-  };
   useEffect(() => {
-    changePassword("123456");
-  }, []);
+    console.log("changing phtoto", user.photoUrl);
+    setImageURl(user.photoUrl);
+  }, [user]);
+
+  const handelFormSubmit = async (values) => {
+    setUploadLoading(true);
+    await updateUser(values);
+    setUploadLoading(false);
+  };
+  const imageChange = (e) => {
+    console.log("file changed");
+    if (e.target.files && e.target.files.length > 0) {
+      console.log(
+        "This file size is: " +
+          Number(e.target.files[0].size / 1024 / 1024).toFixed(2) +
+          "MiB"
+      );
+
+      onSubmitFile(e.target.files[0]);
+    }
+  };
+  const onSubmitFile = async (file) => {
+    try {
+      if (file) {
+        let storageRef = ref(storage, `${user.uid}`);
+
+        if (user.photoUrl.includes("firebasestorage.googleapis.com")) {
+          await deleteObject(storageRef);
+        }
+        uploadBytes(storageRef, file).then(() => {
+          console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef).then((url) => {
+            if (url) {
+              console.log(url);
+              updateUserData({
+                uid: user.uid,
+                photoUrl: url,
+              });
+              setImageURl(url);
+              setUploadLoading(false);
+            } else {
+              setUploadLoading(false);
+              console.log("Image Failed To Upload");
+            }
+          });
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setUploadLoading(true);
+  };
   return (
     <Box
       sx={{
@@ -72,6 +103,10 @@ const Proflie = () => {
       }}
     >
       <Paper elevation={3} sx={{ p: 3 }}>
+        {uploadLoading ? (
+          <LinearProgress sx={{ my: 2 }} color="secondary" />
+        ) : null}
+
         <Typography variant="h1" gutterBottom>
           User Proflie
         </Typography>
@@ -87,16 +122,24 @@ const Proflie = () => {
               sx={{ width: "10%", cursor: "pointer" }}
               className="edit-profile"
               onClick={() => {
-                console.log("handelClick");
+                inputRef.current.click();
               }}
             >
+              <input
+                ref={inputRef}
+                type="file"
+                id="image"
+                accept="image/png, image/jpeg"
+                hidden
+                onChange={imageChange}
+              />
               <img
                 style={{
                   width: "100%",
                   borderRadius: "50%",
                   objectFit: "fill",
                 }}
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                src={imageURl}
                 alt="Live"
               />
             </Box>
@@ -118,27 +161,41 @@ const Proflie = () => {
               </Typography>
             </CardContent>
           </Box>
+
           <Box>
             <Formik
               initialValues={{
-                firstName: "Sumanth",
-                lastName: "Ale",
-                userName: "alesumanth",
-                phoneNumber: "7013344899",
-                address: "",
-                country: "",
-                state: "",
-                city: "",
-                submit: null,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                phone: user.phone,
+                address: user.address,
+                // country: "",
+                // state: "",
+                // city: "",
               }}
+              enableReinitialize
               validationSchema={Yup.object().shape({
-                email: Yup.string()
-                  .email("Must be a valid email")
+                firstName: Yup.string()
+                  .min(4)
                   .max(255)
-                  .required("Email is required"),
-                password: Yup.string()
+                  .required("First Name is required"),
+                lastName: Yup.string()
+                  .min(1)
                   .max(255)
-                  .required("Password is required"),
+                  .required("Last Name is required"),
+                username: Yup.string()
+                  .min(3)
+                  .max(255)
+                  .required("User Name is required"),
+                phone: Yup.string()
+                  .min(10)
+                  .max(10)
+                  .required("Phone Number is required"),
+                address: Yup.string()
+                  .min(3)
+                  .max(255)
+                  .required("Address is required"),
               })}
               onSubmit={async (
                 values,
@@ -173,56 +230,120 @@ const Proflie = () => {
                 <form noValidate onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        label="First Name"
-                        margin="normal"
-                        name="fname"
-                        type="text"
-                        defaultValue={values.firstName}
+                        error={Boolean(touched.firstName && errors.firstName)}
                         sx={{ ...theme.typography.customInput }}
-                      />
+                      >
+                        <InputLabel htmlFor="outlined-adornment-email-register">
+                          First Name
+                        </InputLabel>
+                        <OutlinedInput
+                          id="outlined-adornment-email-register"
+                          type="text"
+                          defaultValue={values.firstName}
+                          name="firstName"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        />
+                        {touched.firstName && errors.firstName && (
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
+                            {errors.firstName}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        label="Last Name"
-                        margin="normal"
-                        name="lname"
-                        type="text"
-                        defaultValue={values.lastName}
+                        error={Boolean(touched.lastName && errors.lastName)}
                         sx={{ ...theme.typography.customInput }}
-                      />
+                      >
+                        <InputLabel htmlFor="outlined-adornment-email-register">
+                          Last Name
+                        </InputLabel>
+                        <OutlinedInput
+                          id="outlined-adornment-email-register"
+                          type="text"
+                          defaultValue={values.lastName}
+                          name="lastName"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        />
+                        {touched.lastName && errors.lastName && (
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
+                            {errors.lastName}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </Grid>
                   </Grid>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        label="User Name"
-                        margin="normal"
-                        name="username"
-                        type="text"
-                        defaultValue={values.userName}
+                        error={Boolean(touched.username && errors.username)}
                         sx={{ ...theme.typography.customInput }}
-                      />
+                      >
+                        <InputLabel htmlFor="outlined-adornment-email-register">
+                          UserName
+                        </InputLabel>
+                        <OutlinedInput
+                          id="outlined-adornment-email-register"
+                          type="text"
+                          defaultValue={values.username}
+                          name="username"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        />
+                        {touched.username && errors.username && (
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
+                            {errors.username}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        label="Phone Number"
-                        margin="normal"
-                        name="number"
-                        type="text"
-                        defaultValue={values.phoneNumber}
+                        error={Boolean(touched.phone && errors.phone)}
                         sx={{ ...theme.typography.customInput }}
-                      />
+                      >
+                        <InputLabel htmlFor="outlined-adornment-email-register">
+                          Phone Number
+                        </InputLabel>
+                        <OutlinedInput
+                          id="outlined-adornment-email-register"
+                          type="number"
+                          defaultValue={values.phone}
+                          name="phone"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        />
+                        {touched.phone && errors.phone && (
+                          <FormHelperText
+                            error
+                            id="standard-weight-helper-text--register"
+                          >
+                            {errors.phone}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </Grid>
                   </Grid>
 
                   <FormControl
                     fullWidth
-                    // error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.address && errors.address)}
                     sx={{ ...theme.typography.customInput }}
                   >
                     <InputLabel htmlFor="outlined-adornment-email-register">
@@ -230,23 +351,22 @@ const Proflie = () => {
                     </InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-email-register"
-                      type="email"
-                      value={values.address}
-                      name="email"
+                      type="text"
+                      defaultValue={values.address}
+                      name="address"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      inputProps={{}}
                     />
-                    {touched.email && errors.email && (
+                    {touched.address && errors.address && (
                       <FormHelperText
                         error
                         id="standard-weight-helper-text--register"
                       >
-                        {errors.email}
+                        {errors.address}
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <Grid container spacing={2}>
+                  {/* <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -301,9 +421,8 @@ const Proflie = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
 
-                  {/* <Countrystatecity /> */}
                   {errors.submit && (
                     <Box sx={{ mt: 3 }}>
                       <FormHelperText error>{errors.submit}</FormHelperText>

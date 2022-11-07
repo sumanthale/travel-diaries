@@ -35,12 +35,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import Google from "assets/images/icons/social-google.svg";
 import { AuthContext } from "context/AuthContext";
+import { useNavigate } from "react-router";
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
+  const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
@@ -268,10 +270,14 @@ const FirebaseLogin = ({ ...others }) => {
                 variant="subtitle1"
                 color="secondary"
                 sx={{ textDecoration: "none", cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/forgot-password");
+                }}
               >
                 Forgot Password?
               </Typography>
             </Stack>
+
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
                 <FormHelperText error>{errors.submit}</FormHelperText>

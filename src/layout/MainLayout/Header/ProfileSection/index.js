@@ -28,9 +28,19 @@ import Transitions from "ui-component/extended/Transitions";
 import User1 from "assets/images/users/user-round.svg";
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from "@tabler/icons";
+import {
+  IconLogout,
+  IconPassword,
+  IconSearch,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons";
 import { AuthContext } from "context/AuthContext";
-import { Person2Outlined } from "@mui/icons-material";
+import {
+  Password,
+  PasswordTwoTone,
+  Person2Outlined,
+} from "@mui/icons-material";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -95,7 +105,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={user.photoUrl || ""}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: "8px 0 8px 8px !important",
@@ -214,6 +224,28 @@ const ProfileSection = () => {
                           primary={
                             <Typography variant="body2">
                               Profile Settings
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
+                      <ListItemButton
+                        sx={{
+                          borderRadius: `${customization.borderRadius}px`,
+                        }}
+                        selected={selectedIndex === 0}
+                        onClick={(event) => {
+                          handleClose(event);
+
+                          navigate("/forgot-password");
+                        }}
+                      >
+                        <ListItemIcon>
+                          <PasswordTwoTone size="1.3rem" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography variant="body2">
+                              Change Password
                             </Typography>
                           }
                         />

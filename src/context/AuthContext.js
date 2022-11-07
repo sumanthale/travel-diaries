@@ -3,7 +3,6 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
@@ -12,6 +11,7 @@ import { auth } from "../firebase/firebase";
 // import { signOutUser } from "../Helpers/Login";
 import Loader from "ui-component/Loader";
 import { useLocation, useNavigate } from "react-router";
+import { getUser, registerUser, updateUserData } from "api/api";
 
 export const AuthContext = React.createContext();
 
@@ -29,8 +29,7 @@ export const AuthProvider = ({ children }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        // ...
+        registerUser({ email, password, uid: user.uid });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -43,13 +42,12 @@ export const AuthProvider = ({ children }) => {
         }
       });
   }
-
   function login({ email, password }) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user.email);
+        getUser(user.uid);
         // ...
       })
       .catch((error) => {
@@ -58,31 +56,15 @@ export const AuthProvider = ({ children }) => {
         setErrorMessage("Invalid Email/Password");
       });
   }
-
-  // function resetPassword(email) {
-  //   sendPasswordResetEmail(auth, email)
-  //     .then(() => {
-  //       // Password reset email sent!
-  //       // ..
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // ..
-  //     });
-  // }
-
   function googleSignIn() {
     signInWithPopup(auth, new GoogleAuthProvider())
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
         // The signed-in user info.
-        console.log(token);
         const user = result.user;
-
-        console.log(user);
+        registerUser({ email: user.email, password: "default", uid: user.uid });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -106,15 +88,36 @@ export const AuthProvider = ({ children }) => {
         console.log(error);
       });
   }
+  const getUserDetails = async (uid) => {
+    setTimeout(async () => {
+      const response = await getUser(uid);
+      console.log(response);
+      if (response) {
+        setUser(response.user);
+      }
+    }, 1000);
+  };
 
+  const updateUser = async (usr) => {
+    const response = await updateUserData({ ...usr, uid: user.uid });
+    console.log(response);
+    if (response) {
+      setUser((u) => ({ ...u, ...usr }));
+    }
+  };
   useEffect(() => {
-    const subscription = onAuthStateChanged(auth, (user) => {
-      if (user != null) {
+    const subscription = onAuthStateChanged(auth, (usr) => {
+      if (usr != null) {
         setIsAuthenticated(true);
-        setUser(user);
+        setUser(usr);
+        getUserDetails(usr.uid);
+
         // setUser(user); // will set the user and all the useEffect's will use this user
-        // getUserDetails(user);
-        navigate(location.pathname);
+        if (["/login", "/register"].includes(location.pathname)) {
+          navigate("/");
+        } else {
+          navigate(location.pathname);
+        }
       } else {
         setIsAuthenticated(false);
 
@@ -148,6 +151,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         login,
         error,
+        updateUser,
       }}
     >
       {!isLoading ? children : <Loader />}

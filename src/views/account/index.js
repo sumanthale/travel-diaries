@@ -1,58 +1,57 @@
 // material-ui
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Alert,
   Button,
   Card,
   CardContent,
   FormControl,
   FormHelperText,
-  Grid,
-  IconButton,
-  InputAdornment,
   InputLabel,
   OutlinedInput,
   Paper,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { AuthContext } from "context/AuthContext";
+import { updateEmail } from "firebase/auth";
 import { Formik } from "formik";
-import Countrystatecity from "Helpers/CountryStateCity";
 import useScriptRef from "hooks/useScriptRef";
 import { useState } from "react";
-import { useEffect } from "react";
 import { useContext } from "react";
 import AnimateButton from "ui-component/extended/AnimateButton";
-import { strengthColor, strengthIndicator } from "utils/password-strength";
 import * as Yup from "yup";
-
+import { auth } from "../../firebase/firebase";
 // project imports
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Account = () => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const theme = useTheme();
   const scriptedRef = useScriptRef();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+  const [updated, setUpdated] = useState(false);
+  const [error, setError] = useState(false);
+  const handelFormSubmit = ({ email }) => {
+    setUpdated(false);
+    setError(false);
+    updateEmail(auth.currentUser, email)
+      .then(() => {
+        console.log("updated");
+        // Email updated!
+        setUpdated(true);
+        updateUser({
+          email,
+        });
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.message);
+        // An error occurred
+        // ...
+      });
   };
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const changePassword = (value) => {};
-  const handelFormSubmit = ({ email, password }) => {
-    console.log(email, password);
-  };
-  useEffect(() => {
-    changePassword("123456");
-  }, []);
   return (
     <Box
       sx={{
@@ -109,11 +108,7 @@ const Account = () => {
           <Box>
             <Formik
               initialValues={{
-                firstName: "",
-                lastName: "",
-                userName: "",
-                number: "",
-                address: "",
+                email: user.email,
                 submit: null,
               }}
               validationSchema={Yup.object().shape({
@@ -121,9 +116,6 @@ const Account = () => {
                   .email("Must be a valid email")
                   .max(255)
                   .required("Email is required"),
-                password: Yup.string()
-                  .max(255)
-                  .required("Password is required"),
               })}
               onSubmit={async (
                 values,
@@ -132,7 +124,7 @@ const Account = () => {
                 try {
                   if (scriptedRef.current) {
                     setStatus({ success: true });
-                    setSubmitting(false);
+                    setSubmitting(true);
                     handelFormSubmit(values);
                     console.log(values);
                   }
@@ -156,85 +148,32 @@ const Account = () => {
                 values,
               }) => (
                 <form noValidate onSubmit={handleSubmit}>
-                  <Grid container spacing={matchDownSM ? 0 : 2}>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl
-                        fullWidth
-                        error={Boolean(touched.email && errors.email)}
-                        sx={{ ...theme.typography.customInput }}
+                  <FormControl
+                    fullWidth
+                    error={Boolean(touched.email && errors.email)}
+                    sx={{ ...theme.typography.customInput }}
+                  >
+                    <InputLabel htmlFor="outlined-adornment-email-register">
+                      Email Address
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-email-register"
+                      type="email"
+                      value={values.email}
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      inputProps={{}}
+                    />
+                    {touched.email && errors.email && (
+                      <FormHelperText
+                        error
+                        id="standard-weight-helper-text--register"
                       >
-                        <InputLabel htmlFor="outlined-adornment-email-register">
-                          Email Address
-                        </InputLabel>
-                        <OutlinedInput
-                          id="outlined-adornment-email-register"
-                          type="email"
-                          value={values.email}
-                          name="email"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          inputProps={{}}
-                        />
-                        {touched.email && errors.email && (
-                          <FormHelperText
-                            error
-                            id="standard-weight-helper-text--register"
-                          >
-                            {errors.email}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl
-                        fullWidth
-                        error={Boolean(touched.password && errors.password)}
-                        sx={{ ...theme.typography.customInput }}
-                      >
-                        <InputLabel htmlFor="outlined-adornment-password-register">
-                          Password
-                        </InputLabel>
-                        <OutlinedInput
-                          id="outlined-adornment-password-register"
-                          type={showPassword ? "text" : "password"}
-                          value={values.password}
-                          name="password"
-                          label="Password"
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            handleChange(e);
-                            changePassword(e.target.value);
-                          }}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                                size="large"
-                              >
-                                {showPassword ? (
-                                  <Visibility />
-                                ) : (
-                                  <VisibilityOff />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                          inputProps={{}}
-                        />
-                        {touched.password && errors.password && (
-                          <FormHelperText
-                            error
-                            id="standard-weight-helper-text-password-register"
-                          >
-                            {errors.password}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                  </Grid>
+                        {errors.email}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
 
                   {errors.submit && (
                     <Box sx={{ mt: 3 }}>
@@ -242,18 +181,31 @@ const Account = () => {
                     </Box>
                   )}
 
+                  {!!error && (
+                    <Box sx={{ mt: 2 }}>
+                      <FormHelperText
+                        sx={{
+                          textAlign: "center",
+                        }}
+                        error
+                      >
+                        {error}
+                      </FormHelperText>
+                    </Box>
+                  )}
+                  {!!updated && <Alert severity="success">Email Updated</Alert>}
                   <Box sx={{ mt: 2 }}>
                     <AnimateButton>
                       <Button
                         disableElevation
-                        disabled={isSubmitting}
+                        // disabled
                         fullWidth
                         size="large"
                         type="submit"
                         variant="contained"
                         color="secondary"
                       >
-                        Update
+                        Update Email
                       </Button>
                     </AnimateButton>
                   </Box>
