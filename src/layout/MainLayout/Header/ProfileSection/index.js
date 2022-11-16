@@ -105,7 +105,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={user.photoUrl || ""}
+            src={user?.photoUrl || ""}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: "8px 0 8px 8px !important",
@@ -168,7 +168,7 @@ const ProfileSection = () => {
                         variant="h4"
                         sx={{ fontWeight: 400 }}
                       >
-                        {user.email}
+                        {user?.email}
                       </Typography>
                     </Stack>
                     <List

@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        registerUser({ email, password, uid: user.uid });
+        registerUser({ email, password, uid: user?.uid });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        getUser(user.uid);
+        getUser(user?.uid);
         // ...
       })
       .catch((error) => {
@@ -64,7 +64,11 @@ export const AuthProvider = ({ children }) => {
         // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        registerUser({ email: user.email, password: "default", uid: user.uid });
+        registerUser({
+          email: user?.email,
+          password: "default",
+          uid: user?.uid,
+        });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -95,11 +99,11 @@ export const AuthProvider = ({ children }) => {
       if (response) {
         setUser(response.user);
       }
-    }, 1000);
+    }, 100);
   };
 
   const updateUser = async (usr) => {
-    const response = await updateUserData({ ...usr, uid: user.uid });
+    const response = await updateUserData({ ...usr, uid: user?.uid });
     console.log(response);
     if (response) {
       setUser((u) => ({ ...u, ...usr }));
@@ -109,7 +113,11 @@ export const AuthProvider = ({ children }) => {
     const subscription = onAuthStateChanged(auth, (usr) => {
       if (usr != null) {
         setIsAuthenticated(true);
-        setUser(usr);
+        setUser({
+          ...usr,
+          photoUrl:
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+        });
         getUserDetails(usr.uid);
 
         // setUser(user); // will set the user and all the useEffect's will use this user
@@ -120,7 +128,6 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         setIsAuthenticated(false);
-
         console.log("😢 We are not authenticated!");
       }
       setIsLoading(false);

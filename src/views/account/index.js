@@ -70,20 +70,14 @@ const Account = () => {
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{ width: "8%", cursor: "pointer" }}
-              className="edit-profile"
-              onClick={() => {
-                console.log("handelClick");
-              }}
-            >
+            <Box sx={{ width: "8%", cursor: "pointer" }}>
               <img
                 style={{
                   width: "100%",
                   borderRadius: "50%",
                   objectFit: "fill",
                 }}
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                src={user?.photoUrl}
                 alt="Live"
               />
             </Box>
@@ -94,21 +88,21 @@ const Account = () => {
               }}
             >
               <Typography component="div" variant="h5">
-                {user.email}
+                {user?.email}
               </Typography>
               <Typography
                 variant="subtitle1"
                 color="text.secondary"
                 component="div"
               >
-                @{user.email.split("@")[0]}
+                @{user?.username}
               </Typography>
             </CardContent>
           </Box>
           <Box>
             <Formik
               initialValues={{
-                email: user.email,
+                email: user?.email,
                 submit: null,
               }}
               validationSchema={Yup.object().shape({

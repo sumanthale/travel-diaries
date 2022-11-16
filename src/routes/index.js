@@ -3,6 +3,7 @@ import MainLayout from "layout/MainLayout";
 import MinimalLayout from "layout/MinimalLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Account from "views/account";
+import Home from "views/home";
 import ForgotPassword from "views/pages/authentication/authentication/ForgotPassword";
 
 // routes
@@ -26,7 +27,7 @@ export default function ThemeRoutes() {
           </RequireAuth>
         }
       >
-        <Route exact path="/" element={<h1>Dashboard</h1>} />
+        <Route exact path="/" element={<Home />} />
         <Route exact path="/profile" element={<Proflie />} />
         <Route exact path="/account" element={<Account />} />
       </Route>
