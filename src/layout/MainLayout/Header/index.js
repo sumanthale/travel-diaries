@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from "@mui/material/styles";
-import { Avatar, Box, ButtonBase } from "@mui/material";
+import { Avatar, Box, ButtonBase, Tooltip } from "@mui/material";
 
 // project imports
 import LogoSection from "../LogoSection";
@@ -9,11 +9,15 @@ import ProfileSection from "./ProfileSection";
 
 // assets
 import { IconMenu2 } from "@tabler/icons";
+import { useLocation, useNavigate } from "react-router";
+import { Home, PostAdd, SearchRounded } from "@mui/icons-material";
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -33,6 +37,34 @@ const Header = ({ handleLeftDrawerToggle }) => {
         >
           <LogoSection />
         </Box>
+        {location.pathname === "/" ? (
+          <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden" }}>
+            <Avatar
+              variant="rounded"
+              sx={{
+                ...theme.typography.commonAvatar,
+                ...theme.typography.mediumAvatar,
+                transition: "all .2s ease-in-out",
+                background: theme.palette.secondary.light,
+                color: theme.palette.secondary.dark,
+                "&:hover": {
+                  background: theme.palette.secondary.dark,
+                  color: theme.palette.secondary.light,
+                },
+              }}
+              onClick={handleLeftDrawerToggle}
+              color="inherit"
+            >
+              <IconMenu2 stroke={1.5} size="1.3rem" />
+            </Avatar>
+          </ButtonBase>
+        ) : null}
+      </Box>
+
+      {/* header search */}
+      <SearchSection />
+      <Box sx={{ flexGrow: 1 }} />
+      <Tooltip title="Home">
         <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden" }}>
           <Avatar
             variant="rounded"
@@ -40,24 +72,70 @@ const Header = ({ handleLeftDrawerToggle }) => {
               ...theme.typography.commonAvatar,
               ...theme.typography.mediumAvatar,
               transition: "all .2s ease-in-out",
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
+              background: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
               "&:hover": {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light,
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
               },
             }}
-            onClick={handleLeftDrawerToggle}
+            onClick={() => {
+              navigate("/");
+            }}
             color="inherit"
           >
-            <IconMenu2 stroke={1.5} size="1.3rem" />
+            <Home stroke={1.5} size="1.3rem" />
           </Avatar>
         </ButtonBase>
-      </Box>
-
-      {/* header search */}
-      <SearchSection />
-      <Box sx={{ flexGrow: 1 }} />
+      </Tooltip>
+      <Tooltip title="Create Post">
+        <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden", ml: 3 }}>
+          <Avatar
+            variant="rounded"
+            sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              transition: "all .2s ease-in-out",
+              background: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
+              "&:hover": {
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
+              },
+            }}
+            onClick={() => {
+              navigate("/post");
+            }}
+            color="inherit"
+          >
+            <PostAdd stroke={1.5} size="1.3rem" />
+          </Avatar>
+        </ButtonBase>
+      </Tooltip>
+      <Tooltip title="Travel Advisor">
+        <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden", ml: 3 }}>
+          <Avatar
+            variant="rounded"
+            sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              transition: "all .2s ease-in-out",
+              background: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
+              "&:hover": {
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
+              },
+            }}
+            onClick={() => {
+              navigate("/travel");
+            }}
+            color="inherit"
+          >
+            <SearchRounded stroke={1.5} size="1.3rem" />
+          </Avatar>
+        </ButtonBase>
+      </Tooltip>
       <Box sx={{ flexGrow: 1 }} />
 
       {/* notification & profile */}

@@ -35,18 +35,125 @@
 
 .swiper {
   width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .swiper-slide {
-  background-position: center;
   background-size: cover;
-  width: 300px;
-  height: 300px;
+  background-position: center;
+  height: 100%;
+}
+
+.mySwiper2 {
+  width: 100%;
+}
+
+.mySwiper {
+  height: 20%;
+  box-sizing: border-box;
+  padding: 10px 0;
+}
+
+.mySwiper .swiper-slide {
+  width: 25%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.mySwiper .swiper-slide-thumb-active {
+  opacity: 1;
 }
 
 .swiper-slide img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ql-editor {
+  min-height: 120px;
+}
+
+/* Dropzone */
+.drop {
+  // max-width: 50%;
+  // margin: 10px auto;
+  // margin-top: 30px;
+}
+.dropzone {
+  max-width: 50%;
+  margin: 10px auto;
+  margin-top: 30px;
+  padding: 30px;
+  min-height: 200px;
+
+  border: 2px dashed #bdbdbd;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dropzone-active {
+  background-color: #eee;
+  border: 2px solid #1b262c92;
+}
+
+/* Images */
+.file-list {
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.file-item {
+  width: 140px;
+  height: 140px;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  margin: 10px;
+  position: relative;
+  &:hover {
+    opacity: 0.8;
+  }
+  & .file-item-delete-icon {
+    visibility: hidden;
+  }
+  &:hover .file-item-delete-icon {
+    visibility: visible;
+  }
+}
+.file-img {
+  width: 100%;
+  height: 100%;
+}
+
+.rating-button {
+  width: fit-content;
+  border-radius: 2px;
+  padding: 4px 8px;
+  margin-right: 9px;
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+
+//truncate
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  word-break: "none";
+  overflow: hidden;
+  hyphens: auto;
+  min-height: 140px;
+  max-height: 140px;
 }

@@ -11,7 +11,9 @@ import ForgotPassword from "views/pages/authentication/authentication/ForgotPass
 // import AuthenticationRoutes from "./AuthenticationRoutes";
 import Login from "views/pages/authentication/authentication/Login";
 import Register from "views/pages/authentication/authentication/Register";
+import CreatePost from "views/posts/createPost";
 import Proflie from "views/profile";
+import TravelAdvisor from "views/travel/TravelAdvisor";
 
 // ==============================|| ROUTING RENDER ||============================== //
 
@@ -28,6 +30,9 @@ export default function ThemeRoutes() {
         }
       >
         <Route exact path="/" element={<Home />} />
+        <Route exact path="/travel" element={<TravelAdvisor />} />
+        <Route exact path="/post" element={<CreatePost />} />
+        <Route exact path="/post/:postId" element={<CreatePost />} />
         <Route exact path="/profile" element={<Proflie />} />
         <Route exact path="/account" element={<Account />} />
       </Route>

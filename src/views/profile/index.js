@@ -175,11 +175,19 @@ const Proflie = () => {
                   firstName: Yup.string()
                     .min(4)
                     .max(255)
-                    .required("First Name is required"),
+                    .required("First Name is required")
+                    .matches(
+                      /^[aA-zZ\s]+$/,
+                      "Only alphabets are allowed for this field "
+                    ),
                   lastName: Yup.string()
                     .min(1)
                     .max(255)
-                    .required("Last Name is required"),
+                    .required("Last Name is required")
+                    .matches(
+                      /^[aA-zZ\s]+$/,
+                      "Only alphabets are allowed for this field "
+                    ),
                   username: Yup.string()
                     .min(3)
                     .max(255)

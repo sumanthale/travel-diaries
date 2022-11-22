@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 
 // material-ui
 import { styled, useTheme } from "@mui/material/styles";
@@ -13,16 +13,13 @@ import {
 } from "@mui/material";
 
 // project imports
-import Breadcrumbs from "ui-component/extended/Breadcrumbs";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Customization from "../Customization";
-import navigation from "menu-items";
 import { drawerWidth } from "store/constant";
 import { SET_MENU } from "store/actions";
 
 // assets
-import { IconChevronRight } from "@tabler/icons";
 
 // styles
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -73,6 +70,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 // ==============================|| MAIN LAYOUT ||============================== //
 
 const MainLayout = () => {
+  const location = useLocation();
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down("lg"));
 
@@ -80,8 +78,18 @@ const MainLayout = () => {
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
   const handleLeftDrawerToggle = () => {
-    dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
+    if (location.pathname === "/")
+      dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
+  useEffect(() => {
+    if (location.pathname !== "/" && leftDrawerOpened) {
+      console.log("in post opned");
+
+      dispatch({ type: SET_MENU, opened: false });
+    } else if (location.pathname === "/" && !leftDrawerOpened && !matchDownMd) {
+      dispatch({ type: SET_MENU, opened: true });
+    }
+  }, [location]);
 
   useEffect(() => {
     dispatch({ type: SET_MENU, opened: !matchDownMd });

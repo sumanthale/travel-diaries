@@ -36,16 +36,12 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
             paddingRight: "16px",
           }}
         >
-          {/* <MenuList /> */}
-          {/* <MenuCard /> */}
-          <h1>SideBar</h1>
+          <MenuCard />
         </PerfectScrollbar>
       </BrowserView>
       <MobileView>
         <Box sx={{ px: 2 }}>
-          {/* <MenuList /> */}
-          {/* <MenuCard /> */}
-          <h1>SideBar</h1>
+          <MenuCard />
         </Box>
       </MobileView>
     </>

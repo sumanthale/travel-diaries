@@ -25,22 +25,11 @@ import {
 // project imports
 import MainCard from "ui-component/cards/MainCard";
 import Transitions from "ui-component/extended/Transitions";
-import User1 from "assets/images/users/user-round.svg";
 
 // assets
-import {
-  IconLogout,
-  IconPassword,
-  IconSearch,
-  IconSettings,
-  IconUser,
-} from "@tabler/icons";
+import { IconLogout, IconSettings } from "@tabler/icons";
 import { AuthContext } from "context/AuthContext";
-import {
-  Password,
-  PasswordTwoTone,
-  Person2Outlined,
-} from "@mui/icons-material";
+import { PasswordTwoTone, Person2Outlined } from "@mui/icons-material";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -51,7 +40,6 @@ const ProfileSection = () => {
 
   const { signOutUser, user } = useContext(AuthContext);
 
-  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -188,7 +176,6 @@ const ProfileSection = () => {
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
                         }}
-                        selected={selectedIndex === 0}
                         onClick={(event) => {
                           handleClose(event);
 
@@ -210,7 +197,6 @@ const ProfileSection = () => {
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
                         }}
-                        selected={selectedIndex === 0}
                         onClick={(event) => {
                           handleClose(event);
 
@@ -232,7 +218,6 @@ const ProfileSection = () => {
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
                         }}
-                        selected={selectedIndex === 0}
                         onClick={(event) => {
                           handleClose(event);
 
@@ -254,7 +239,6 @@ const ProfileSection = () => {
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
                         }}
-                        selected={selectedIndex === 4}
                         onClick={handleLogout}
                       >
                         <ListItemIcon>

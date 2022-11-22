@@ -1,76 +1,208 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Images from "./ImagesCarousel";
-import { Button, Chip, Rating } from "@mui/material";
+import { Box, Button, Chip, Grid, Menu, MenuItem } from "@mui/material";
 import { Stack } from "@mui/system";
 import PlaceIcon from "@mui/icons-material/Place";
-export default function Post() {
+import dayjs from "dayjs";
+import { AccessTime, Favorite, Star } from "@mui/icons-material";
+import { useNavigate } from "react-router";
+import { deletePost } from "api/api";
+var relativeTime = require("dayjs/plugin/relativeTime");
+
+dayjs.extend(relativeTime);
+export default function Post({ post, uid }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
-    <Card sx={{ maxWidth: 860, margin: "auto" }}>
+    <Card sx={{ maxWidth: 960, margin: "auto", mb: 2 }}>
       <CardHeader
+        sx={{
+          px: 2,
+          py: 2,
+          pb: 1,
+        }}
         avatar={
-          <Avatar sx={{}} aria-label="recipe">
+          <Avatar aria-label="recipe" src={post?.user?.photoUrl}>
             R
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          uid === post?.user?.uid ? (
+            <div>
+              <IconButton aria-label="settings" onClick={handleClick}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    navigate(`/post/${post?._id}`);
+                    handleClose();
+                  }}
+                >
+                  Edit Post
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    deletePost({ _id: post?._id });
+                    handleClose();
+                  }}
+                >
+                  Delete
+                </MenuItem>
+              </Menu>
+            </div>
+          ) : null
         }
-        title="John Doe"
-        subheader="September 14, 2022"
+        title={post?.user?.username}
+        subheader={`${dayjs(post.createdAt).fromNow()}`}
       />
-      <Images />
-      <CardContent>
-        <Stack direction={"row"}>
-          <Typography gutterBottom variant="h2" component="div">
-            Title Goes Here...
-          </Typography>
-          <Rating
-            sx={{
-              marginLeft: "auto",
-            }}
-            name="size-medium"
-            defaultValue={2}
-          />
-        </Stack>
-        <Stack direction={"row"}>
-          <PlaceIcon />
-          <Typography variant="body2" color="text.secondary">
-            Location1, Location2, Location3
-          </Typography>
-        </Stack>
-        <Stack direction={"row"} sx={{ my: 2 }} spacing={1}>
-          <Chip label="Chip 1" />
-          <Chip label="Chip 2" />
-          <Chip label="Chip 3" />
-        </Stack>
 
-        <Typography variant="body1">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ad
-          architecto dicta earum inventore dolorem reprehenderit odio officia,
-          consequatur totam. Dolorum, aliquam omnis.amet consectetur adipisicing
-          elit. Ad architecto dicta earum inventore dolorem reprehenderit odio
-          officia, consequatur totam. Dolorum, aliquam omnis.
-        </Typography>
-      </CardContent>
-      <CardActions
-        sx={{
-          pt: 0,
-        }}
-      >
-        <Button size="small" color="error">
-          View More
-        </Button>
-      </CardActions>
+      <Grid container>
+        {post.images.length > 0 ? (
+          <Grid item xs={12} sm={5}>
+            <Images images={post.images} />
+          </Grid>
+        ) : null}
+        <Grid item xs={12} sm={post.images.length > 0 ? 7 : 12}>
+          <Box
+            sx={{
+              px: 2,
+              pt: 1,
+            }}
+          >
+            <Typography variant="h2" component="div">
+              {post.title}
+            </Typography>
+
+            <Stack
+              direction={"row"}
+              sx={{
+                alignItems: "center",
+                my: 2,
+              }}
+              spacing={1}
+            >
+              <span
+                className="rating-button"
+                style={{
+                  backgroundColor: `${findColor(post.rating)}`,
+                }}
+              >
+                <span>{post.rating}.0</span>
+                <Star
+                  sx={{
+                    fontSize: "14px",
+                  }}
+                />
+              </span>
+              {post.rating >= 4 && (
+                <>
+                  <span
+                    style={{
+                      backgroundColor: "#fcc",
+                      padding: "3px",
+                      borderRadius: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Favorite
+                      sx={{
+                        color: "#ff5d5d",
+                        fontSize: "14px",
+                      }}
+                    />
+                  </span>
+
+                  <Typography>Recommended by 100% of travellers</Typography>
+                </>
+              )}
+            </Stack>
+            <Stack direction={"row"} sx={{ my: 2 }} spacing={1}>
+              <Chip
+                icon={<PlaceIcon />}
+                label="Location 1, Location 2"
+                variant="outlined"
+                color="secondary"
+              />
+              <Chip
+                icon={<AccessTime />}
+                label="1 hour 30 min"
+                variant="outlined"
+                color="primary"
+              />
+            </Stack>
+            <div
+              className="truncate"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+
+            <Box
+              sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
+            >
+              <Box>
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: "35px",
+                    fontWeight: "bold",
+                    color: "#000",
+                  }}
+                >
+                  ${Number(post.price)}.00
+                </Typography>
+                <Typography component="p" variant="body2">
+                  per adult
+                </Typography>
+              </Box>
+              <Box>
+                <Button sx={{}} variant="outlined">
+                  View Details
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     </Card>
   );
 }
+
+const findColor = (color) => {
+  switch (color) {
+    case 1:
+      return "#ff4545";
+    case 2:
+      return "#ffa534";
+    case 3:
+      return "#ffe234";
+    case 4:
+      return "#b7dd29";
+    case 5:
+      return "#57e32c";
+    default:
+      break;
+  }
+};

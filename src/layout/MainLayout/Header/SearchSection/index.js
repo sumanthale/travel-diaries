@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useState } from "react";
 
 // material-ui
@@ -8,10 +7,12 @@ import {
   Box,
   ButtonBase,
   Card,
+  FormControlLabel,
   Grid,
   InputAdornment,
   OutlinedInput,
   Popper,
+  Switch,
 } from "@mui/material";
 
 // third-party
@@ -23,6 +24,9 @@ import Transitions from "ui-component/extended/Transitions";
 // assets
 import { IconAdjustmentsHorizontal, IconSearch, IconX } from "@tabler/icons";
 import { shouldForwardProp } from "@mui/system";
+import { useContext } from "react";
+import { PostContext } from "context/PostContext";
+import { useLocation } from "react-router";
 
 // styles
 const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
@@ -71,14 +75,14 @@ const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(
 
 // ==============================|| SEARCH INPUT - MOBILE||============================== //
 
-const MobileSearch = ({ value, setValue, popupState }) => {
+const MobileSearch = ({ value, handelChange, popupState }) => {
   const theme = useTheme();
 
   return (
     <OutlineInputStyle
       id="input-search-header"
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={handelChange}
       placeholder="Search"
       startAdornment={
         <InputAdornment position="start">
@@ -127,8 +131,20 @@ const MobileSearch = ({ value, setValue, popupState }) => {
 // ==============================|| SEARCH INPUT ||============================== //
 
 const SearchSection = () => {
+  const { filterByTitle } = useContext(PostContext);
   const theme = useTheme();
+  const location = useLocation();
+
   const [value, setValue] = useState("");
+  const handelChange = (e) => {
+    let word = e.target.value;
+    setValue(word);
+    if (location.pathname === "/") {
+      filterByTitle(word);
+    } else {
+      console.log(word);
+    }
+  };
 
   return (
     <>
@@ -172,7 +188,7 @@ const SearchSection = () => {
                             <Grid item xs>
                               <MobileSearch
                                 value={value}
-                                setValue={setValue}
+                                handelChange={handelChange}
                                 popupState={popupState}
                               />
                             </Grid>
@@ -191,7 +207,7 @@ const SearchSection = () => {
         <OutlineInputStyle
           id="input-search-header"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handelChange}
           placeholder="Search"
           startAdornment={
             <InputAdornment position="start">

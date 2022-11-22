@@ -13,18 +13,21 @@ import themes from "themes";
 import NavigationScroll from "layout/NavigationScroll";
 import { AuthProvider } from "context/AuthContext";
 import "./style.scss";
+import { PostProvider } from "context/PostContext";
 // ==============================|| APP ||============================== //
 
 const App = () => {
-  const customization = useSelector((state) => state.customization);
-
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes(customization)}>
+      <ThemeProvider
+        theme={themes({ fontFamily: `'Roboto', sans-serif`, borderRadius: 12 })}
+      >
         <CssBaseline />
         <NavigationScroll>
           <AuthProvider>
-            <Routes />
+            <PostProvider>
+              <Routes />
+            </PostProvider>
           </AuthProvider>
         </NavigationScroll>
       </ThemeProvider>
