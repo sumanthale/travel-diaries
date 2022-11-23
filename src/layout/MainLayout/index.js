@@ -15,7 +15,7 @@ import {
 // project imports
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Customization from "../Customization";
+// import Customization from "../Customization";
 import { drawerWidth } from "store/constant";
 import { SET_MENU } from "store/actions";
 
@@ -39,12 +39,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       [theme.breakpoints.down("md")]: {
         marginLeft: "20px",
         width: `calc(100% - ${drawerWidth}px)`,
-        padding: "16px",
       },
       [theme.breakpoints.down("sm")]: {
         marginLeft: "10px",
         width: `calc(100% - ${drawerWidth}px)`,
-        padding: "16px",
         marginRight: "10px",
       },
     }),
@@ -92,7 +90,8 @@ const MainLayout = () => {
   }, [location]);
 
   useEffect(() => {
-    dispatch({ type: SET_MENU, opened: !matchDownMd });
+    if (location.pathname === "/")
+      dispatch({ type: SET_MENU, opened: !matchDownMd });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchDownMd]);
 
@@ -100,6 +99,7 @@ const MainLayout = () => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       {/* header */}
+
       <AppBar
         enableColorOnDark
         position="fixed"
@@ -125,14 +125,6 @@ const MainLayout = () => {
 
       {/* main content */}
       <Main theme={theme} open={leftDrawerOpened}>
-        {/* breadcrumb */}
-        {/* <yyyy
-          separator={IconChevronRight}
-          navigation={navigation}
-          icon
-          title
-          rightAlign
-        /> */}
         <Outlet />
       </Main>
       {/* <Customization /> */}

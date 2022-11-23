@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from "@mui/material/styles";
-import { Avatar, Box, ButtonBase, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, ButtonBase, Tooltip } from "@mui/material";
 
 // project imports
 import LogoSection from "../LogoSection";
@@ -62,7 +62,11 @@ const Header = ({ handleLeftDrawerToggle }) => {
       </Box>
 
       {/* header search */}
-      <SearchSection />
+      {location.pathname === "/" ? (
+        <>
+          <SearchSection />
+        </>
+      ) : null}
       <Box sx={{ flexGrow: 1 }} />
       <Tooltip title="Home">
         <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden" }}>
@@ -88,6 +92,42 @@ const Header = ({ handleLeftDrawerToggle }) => {
           </Avatar>
         </ButtonBase>
       </Tooltip>
+      {/* <Button
+        sx={{
+          borderRadius: "12px",
+          overflow: "hidden",
+          background: theme.palette.primary.light,
+          "&:hover": {
+            background: theme.palette.primary.light,
+            color: theme.palette.primary.dark,
+          },
+        }}
+        startIcon={
+          <Avatar
+            variant="rounded"
+            sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              transition: "all .2s ease-in-out",
+              background: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
+              "&:hover": {
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
+              },
+            }}
+            onClick={() => {
+              navigate("/");
+            }}
+            color="inherit"
+          >
+            <Home stroke={1.5} size="1.3rem" />
+          </Avatar>
+        }
+      >
+        {" "}
+        Home
+      </Button> */}
       <Tooltip title="Create Post">
         <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden", ml: 3 }}>
           <Avatar
@@ -136,7 +176,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
           </Avatar>
         </ButtonBase>
       </Tooltip>
-      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ flexGrow: 0.1 }} />
 
       {/* notification & profile */}
       {/* <NotificationSection /> */}

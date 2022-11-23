@@ -9,7 +9,6 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { BrowserView, MobileView } from "react-device-detect";
 
 // project imports
-import MenuList from "./MenuList";
 import LogoSection from "../LogoSection";
 import MenuCard from "./MenuCard";
 import { drawerWidth } from "store/constant";

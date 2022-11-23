@@ -12,11 +12,10 @@ import PlaceIcon from "@mui/icons-material/Place";
 import dayjs from "dayjs";
 import { AccessTime, Favorite, Star } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import { deletePost } from "api/api";
 var relativeTime = require("dayjs/plugin/relativeTime");
 
 dayjs.extend(relativeTime);
-export default function Post({ post, uid }) {
+export default function Post({ post, uid, deltePostByID }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -64,7 +63,7 @@ export default function Post({ post, uid }) {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    deletePost({ _id: post?._id });
+                    deltePostByID({ _id: post?._id });
                     handleClose();
                   }}
                 >
@@ -143,7 +142,7 @@ export default function Post({ post, uid }) {
             <Stack direction={"row"} sx={{ my: 2 }} spacing={1}>
               <Chip
                 icon={<PlaceIcon />}
-                label="Location 1, Location 2"
+                label={post?.location}
                 variant="outlined"
                 color="secondary"
               />

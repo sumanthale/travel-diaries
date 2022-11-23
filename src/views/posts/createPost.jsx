@@ -35,6 +35,8 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { PostContext } from "context/PostContext";
 import { createPost, updatePost } from "api/api";
+import { Autocomplete } from "@react-google-maps/api";
+import AutoSearch from "views/travel/AutoSearch";
 
 // ==============================|| SAMPLE PAGE ||============================== //
 const modules = {
@@ -55,6 +57,7 @@ const CreatePost = () => {
   const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const [rating, setRating] = useState(3);
+  const [location, setLocation] = useState([]);
 
   const theme = useTheme();
   const scriptedRef = useScriptRef();
@@ -74,6 +77,7 @@ const CreatePost = () => {
         ...values,
         content: value,
         rating,
+        location,
       };
       delete postObj.submit;
       const uploadingImages = [];
@@ -127,7 +131,17 @@ const CreatePost = () => {
     }
     return url;
   };
+  const [autocomplete, setAutocomplete] = useState(null);
 
+  const onLoad = (autoC) => {
+    setAutocomplete(autoC);
+  };
+
+  const onPlaceChanged = () => {
+    setLocation(autocomplete.getPlace().formatted_address);
+    // const lat = autocomplete.getPlace().geometry.location.lat();
+    // const lng = autocomplete.getPlace().geometry.location.lng();
+  };
   useEffect(() => {
     if (postId && posts.length > 0) {
       console.log("Update Post Page");
@@ -147,6 +161,7 @@ const CreatePost = () => {
               file: null,
             }))
           );
+          setLocation(post.location);
         }
       } else {
         navigate("/");
@@ -159,6 +174,7 @@ const CreatePost = () => {
     <Box
       sx={{
         minHeight: "500px",
+        p: "20px",
       }}
     >
       <Paper elevation={3} sx={{ p: 3 }}>
@@ -176,7 +192,6 @@ const CreatePost = () => {
           initialValues={{
             title: post?.title || "",
             price: post?.price || "",
-            // state: "",
             // country: "",
             // city: "",
             submit: null,
@@ -282,31 +297,27 @@ const CreatePost = () => {
                     }}
                   />
                 </Grid>
-                {/* 
+
                 <Grid item xs={12} md={4}>
-                  <FormControl
-                    fullWidth
-                    error={Boolean(touched.date && errors.date)}
-                    sx={{ ...theme.typography.customInput }}
-                  >
-                    
-                    <OutlinedInput
-                      type="date"
-                      value={values.date}
-                      name="date"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                    />
-                    {touched.date && errors.date && (
-                      <FormHelperText
-                        error
-                        id="standard-weight-helper-text--register"
-                      >
-                        {errors.date}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid> */}
+                  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                    <FormControl
+                      fullWidth
+                      sx={{ ...theme.typography.customInput }}
+                    >
+                      <InputLabel htmlFor="outlined-adornment-email-register">
+                        Location
+                      </InputLabel>
+                      <OutlinedInput
+                        value={location}
+                        onChange={(e) => {
+                          setLocation(e.target.value);
+                        }}
+                        type="text"
+                        name="search"
+                      />
+                    </FormControl>
+                  </Autocomplete>
+                </Grid>
                 <Grid item xs={12} md={4}>
                   <FormControl
                     fullWidth
@@ -414,41 +425,66 @@ const CreatePost = () => {
                   Post Created Successfully!!
                 </Alert>
               </Collapse>
-              <Stack
-                sx={{ mt: 2, justifyContent: "center" }}
-                spacing={3}
-                direction="row"
-              >
-                <AnimateButton>
-                  <Button
-                    disableElevation
-                    // disabled
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                  >
-                    {!!postId ? "Update" : "Create"} Post
-                  </Button>
-                </AnimateButton>
-                <AnimateButton>
-                  <Button
-                    disableElevation
-                    // disabled
-                    fullWidth
-                    size="large"
-                    type="button"
-                    variant="contained"
-                    color="warning"
-                    onClick={() => {
-                      navigate("/");
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </AnimateButton>
-              </Stack>
+              {!updated ? (
+                <Stack
+                  sx={{ mt: 2, justifyContent: "center" }}
+                  spacing={3}
+                  direction="row"
+                >
+                  <AnimateButton>
+                    <Button
+                      disableElevation
+                      // disabled
+                      fullWidth
+                      size="large"
+                      type="submit"
+                      variant="contained"
+                      color="secondary"
+                    >
+                      {!!postId ? "Update" : "Create"} Post
+                    </Button>
+                  </AnimateButton>
+                  <AnimateButton>
+                    <Button
+                      disableElevation
+                      // disabled
+                      fullWidth
+                      size="large"
+                      type="button"
+                      variant="contained"
+                      color="warning"
+                      onClick={() => {
+                        navigate("/");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </AnimateButton>
+                </Stack>
+              ) : (
+                <Stack
+                  sx={{ mt: 2, justifyContent: "center" }}
+                  spacing={3}
+                  direction="row"
+                >
+                  <AnimateButton>
+                    <Button
+                      disableElevation
+                      // disabled
+                      fullWidth
+                      size="large"
+                      type="button"
+                      variant="contained"
+                      color="info"
+                      onClick={() => {
+                        navigate("/");
+                      }}
+                    >
+                      Go Back
+                    </Button>
+                  </AnimateButton>
+                </Stack>
+              )}
             </form>
           )}
         </Formik>

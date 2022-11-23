@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { getPosts } from "api/api";
+import { deletePost, getPosts } from "api/api";
 
 export const PostContext = React.createContext();
 
@@ -46,6 +46,16 @@ export const PostProvider = ({ children }) => {
   const reset = () => {
     setPosts(allPosts);
   };
+  const deltePostByID = async (req) => {
+    try {
+      const { status } = await deletePost(req);
+      if (!status) throw new Error(`Status is false not Delted`);
+      const filteredPosts = allPosts.filter((el) => el._id !== req._id);
+      setPosts(filteredPosts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <PostContext.Provider
       value={{
@@ -56,6 +66,7 @@ export const PostProvider = ({ children }) => {
         fetchData,
         filterPosts,
         reset,
+        deltePostByID,
       }}
     >
       {children}

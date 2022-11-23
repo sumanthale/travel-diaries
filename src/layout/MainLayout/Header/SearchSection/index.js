@@ -7,12 +7,10 @@ import {
   Box,
   ButtonBase,
   Card,
-  FormControlLabel,
   Grid,
   InputAdornment,
   OutlinedInput,
   Popper,
-  Switch,
 } from "@mui/material";
 
 // third-party
@@ -133,17 +131,10 @@ const MobileSearch = ({ value, handelChange, popupState }) => {
 const SearchSection = () => {
   const { filterByTitle } = useContext(PostContext);
   const theme = useTheme();
-  const location = useLocation();
 
-  const [value, setValue] = useState("");
   const handelChange = (e) => {
     let word = e.target.value;
-    setValue(word);
-    if (location.pathname === "/") {
-      filterByTitle(word);
-    } else {
-      console.log(word);
-    }
+    filterByTitle(word);
   };
 
   return (
@@ -187,7 +178,6 @@ const SearchSection = () => {
                           >
                             <Grid item xs>
                               <MobileSearch
-                                value={value}
                                 handelChange={handelChange}
                                 popupState={popupState}
                               />
@@ -206,7 +196,6 @@ const SearchSection = () => {
       <Box sx={{ display: { xs: "none", md: "block" } }}>
         <OutlineInputStyle
           id="input-search-header"
-          value={value}
           onChange={handelChange}
           placeholder="Search"
           startAdornment={
