@@ -11,7 +11,7 @@ import "swiper/css/thumbs";
 // import required modules
 import { FreeMode, Navigation, Thumbs } from "swiper";
 
-export default function Images({ images }) {
+export default function Images({ images, single }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (

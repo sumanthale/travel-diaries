@@ -12,7 +12,8 @@ import {
 import { LocationOnOutlined } from "@mui/icons-material";
 import mapStyles from "../mapStyles";
 import { useState } from "react";
-import Search from "@mui/icons-material/Search";
+import { Stack } from "@mui/system";
+// import Search from "@mui/icons-material/Search";
 
 const Map = ({
   coords,
@@ -22,32 +23,45 @@ const Map = ({
   setChildClicked,
   drag,
   setDrag,
+  weatherData,
 }) => {
   const matches = useMediaQuery("(min-width:600px)");
 
-  const [move, setMove] = useState(false);
+  // const [move, setMove] = useState(false);
+  // const handelChange = (e) => {
+  //   if (drag) {
+  //     setMove({
+  //       cords: { lat: e.center.lat, lng: e.center.lng },
+  //       bounds: { ne: e.marginBounds.ne, sw: e.marginBounds.sw },
+  //     });
+  //   } else {
+  //     setCoords({ lat: e.center.lat, lng: e.center.lng });
+  //     setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+  //     setDrag(true);
+  //   }
+  // };
   const handelChange = (e) => {
-    if (drag) {
-      setMove({
-        cords: { lat: e.center.lat, lng: e.center.lng },
-        bounds: { ne: e.marginBounds.ne, sw: e.marginBounds.sw },
-      });
-    } else {
-      setCoords({ lat: e.center.lat, lng: e.center.lng });
-      setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
-      setDrag(true);
-    }
+    //  if (drag) {
+    //    setMove({
+    //      cords: { lat: e.center.lat, lng: e.center.lng },
+    //      bounds: { ne: e.marginBounds.ne, sw: e.marginBounds.sw },
+    //    });
+    //  } else {
+    setCoords({ lat: e.center.lat, lng: e.center.lng });
+    setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+    //    setDrag(true);
+    //  }
   };
-  const handelClick = () => {
-    setCoords(move.cords);
-    setBounds(move.bounds);
-    console.log(move);
-    setMove(false);
-  };
+  // const handelClick = () => {
+  //   setCoords(move.cords);
+  //   setBounds(move.bounds);
+  //   console.log(move);
+  //   setMove(false);
+  // };
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>
-      {move && (
+      {/* {move && (
         <Box
           sx={{
             position: "absolute",
@@ -70,7 +84,7 @@ const Map = ({
             onClick={handelClick}
           />
         </Box>
-      )}
+      )} */}
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
         defaultCenter={{
@@ -143,6 +157,64 @@ const Map = ({
               )}
             </Box>
           ))}
+
+        {!!weatherData && (
+          <div lat={weatherData?.coord.lat} lng={weatherData?.coord.lon}>
+            <img
+              src={`http://openweathermap.org/img/w/${weatherData?.weather[0].icon}.png`}
+              height="70px"
+              alt="weather"
+            />
+          </div>
+        )}
+
+        {!!weatherData && (
+          <Box
+            sx={{
+              position: "absolute",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1,
+              "&:hover": { zIndex: 2 },
+            }}
+            lat={weatherData?.coord.lat}
+            lng={weatherData?.coord.lon}
+          >
+            <Paper
+              elevation={3}
+              sx={{
+                padding: "3px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                width: "100px",
+                textAlign: "center",
+              }}
+            >
+              <Typography className="truncate-map" variant="h5" gutterBottom>
+                {weatherData?.name}
+              </Typography>
+              <Stack
+                direction={"row"}
+                sx={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6">
+                  {weatherData?.main?.temp} °C{" "}
+                </Typography>
+                <img
+                  src={`http://openweathermap.org/img/w/${weatherData?.weather[0].icon}.png`}
+                  alt="weather"
+                />
+              </Stack>
+
+              <Typography variant="subtitle2">
+                {weatherData?.weather[0].description}
+              </Typography>
+            </Paper>
+          </Box>
+        )}
       </GoogleMapReact>
     </div>
   );

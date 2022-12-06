@@ -29,14 +29,12 @@ import "react-quill/dist/quill.snow.css";
 import Drop from "./Drop";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/firebase";
-import { v4 as uuid } from "uuid";
 import { CloseOutlined } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { PostContext } from "context/PostContext";
-import { createPost, updatePost } from "api/api";
+import { createPost, removeSpamWords, updatePost } from "api/api";
 import { Autocomplete } from "@react-google-maps/api";
-import AutoSearch from "views/travel/AutoSearch";
 
 // ==============================|| SAMPLE PAGE ||============================== //
 const modules = {
@@ -57,7 +55,7 @@ const CreatePost = () => {
   const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const [rating, setRating] = useState(3);
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState(null);
 
   const theme = useTheme();
   const scriptedRef = useScriptRef();
@@ -73,9 +71,11 @@ const CreatePost = () => {
   const handelFormSubmit = async (values) => {
     setLoading(true);
     try {
+      const content = await removeSpamWords(value);
+      console.log(content);
       const postObj = {
         ...values,
-        content: value,
+        content: content || value,
         rating,
         location,
       };
@@ -147,9 +147,8 @@ const CreatePost = () => {
       console.log("Update Post Page");
       const post = posts.find((post) => post._id === postId);
       if (post) {
-        // if (user?.uid !== post?.user?.uid) {
-        if (false) {
-          // navigate("/");
+        if (user?.uid !== post?.user?.uid) {
+          navigate("/");
         } else {
           setPost(post);
           setRating(post.rating);
@@ -167,9 +166,14 @@ const CreatePost = () => {
         navigate("/");
       }
     } else {
+      setPost(null);
+      setRating(3);
+      setValue("");
+      setImages([]);
+      setLocation(null);
       console.log("Create Post Page");
     }
-  }, [posts]);
+  }, [posts, postId]);
   return (
     <Box
       sx={{

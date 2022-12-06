@@ -1,5 +1,6 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8080";
+// const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://travel-backend-mul9.vercel.app";
 
 const USER_URL = BASE_URL + "/api/user";
 const POST_URL = BASE_URL + "/api/post";
@@ -116,6 +117,30 @@ export const deletePost = async (id) => {
   return response;
 };
 
+export const removeSpamWords = async (text) => {
+  try {
+    const resp = await axios.get(
+      `https://community-purgomalum.p.rapidapi.com/json`,
+      {
+        params: { text, fill_text: " " },
+        headers: {
+          "X-RapidAPI-Key":
+            "dcd9d99848msh7df1a7380d83f1ap10e381jsne8d7894acd13",
+          "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com",
+        },
+      }
+    );
+    console.log(resp);
+    const {
+      data: { result },
+    } = resp;
+    return result;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const getPlacesData = async (type, sw, ne) => {
   console.log(type, sw, ne);
   try {
@@ -164,4 +189,29 @@ export const getWeatherData = async (lat, lng) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const checkout = async (quantity) => {
+  fetch(`${BASE_URL}/create-checkout-session`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      quantity,
+    }),
+  })
+    .then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((json) => Promise.reject(json));
+    })
+    .then(({ url }) => {
+      window.open(
+        url,
+        "_blank" // <- This is what makes it open in a new window.
+      );
+    })
+    .catch((e) => {
+      console.error(e.error);
+    });
 };

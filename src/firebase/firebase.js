@@ -8,15 +8,6 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 
-//TODO MINE
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCIDAQhljlTQGY59STEnF6EvrqBWmwWQD4",
-//   authDomain: "travel-37b6d.firebaseapp.com",
-//   projectId: "travel-37b6d",
-//   storageBucket: "travel-37b6d.appspot.com",
-//   messagingSenderId: "819339224842",
-//   appId: "1:819339224842:web:e0deee7f2b956520e1bcf3",
-// };
 const firebaseConfig = {
   apiKey: "AIzaSyAu2dFp-AjoAxrV-ZRcwbmU5BT2iukVxn4",
   authDomain: "travel-diary-e50f0.firebaseapp.com",

@@ -44,6 +44,12 @@ const MenuCard = () => {
   const [price, setPrice] = useState([1, 9999]);
   const [checked, setChecked] = useState(1);
 
+  const handelReset = () => {
+    reset();
+    setPrice([1, 9999]);
+    setChecked(1);
+  };
+
   const handleChange = (event, newValue) => {
     setPrice(newValue);
   };
@@ -72,7 +78,7 @@ const MenuCard = () => {
           >
             Filter
           </Typography>
-          <Button onClick={reset} color="error">
+          <Button onClick={handelReset} color="error">
             Reset
           </Button>
         </Stack>

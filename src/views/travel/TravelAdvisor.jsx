@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 import { Autocomplete } from "@react-google-maps/api";
 
@@ -15,12 +14,11 @@ import AutoSearch from "./AutoSearch";
 const TravelAdvisor = () => {
   const [type, setType] = useState("attractions");
   const [rating, setRating] = useState("");
-  const theme = useTheme();
   const [drag, setDrag] = useState(false);
 
   const [coords, setCoords] = useState({});
   const [bounds, setBounds] = useState(null);
-  const [weatherData, setWeatherData] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [places, setPlaces] = useState([]);
 
@@ -46,9 +44,12 @@ const TravelAdvisor = () => {
     if (bounds) {
       setIsLoading(true);
 
-      //   getWeatherData(coords.lat, coords.lng)
-      //     .then((data) => setWeatherData(data))
-      //     .catch((err) => console.log(err));
+      getWeatherData(coords.lat, coords.lng)
+        .then((data) => {
+          console.log(data);
+          setWeatherData(data);
+        })
+        .catch((err) => console.log(err));
 
       getPlacesData(type, bounds.sw, bounds.ne)
         .then((data) => {
@@ -74,7 +75,7 @@ const TravelAdvisor = () => {
     const lng = autocomplete.getPlace().geometry.location.lng();
 
     setCoords({ lat, lng });
-    setDrag(false);
+    // setDrag(false);
   };
 
   return (

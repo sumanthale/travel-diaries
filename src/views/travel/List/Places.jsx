@@ -7,7 +7,7 @@ import {
   Select,
   Skeleton,
 } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Stack } from "@mui/system";
 import React, { useState, useEffect, createRef } from "react";
 import PlaceDetails from "./PlaceDetails";
 

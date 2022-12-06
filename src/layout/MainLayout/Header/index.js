@@ -10,7 +10,7 @@ import ProfileSection from "./ProfileSection";
 // assets
 import { IconMenu2 } from "@tabler/icons";
 import { useLocation, useNavigate } from "react-router";
-import { Home, PostAdd, SearchRounded } from "@mui/icons-material";
+import { Home, Info, PostAdd, SearchRounded } from "@mui/icons-material";
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -60,7 +60,6 @@ const Header = ({ handleLeftDrawerToggle }) => {
           </ButtonBase>
         ) : null}
       </Box>
-
       {/* header search */}
       {location.pathname === "/" ? (
         <>
@@ -175,9 +174,32 @@ const Header = ({ handleLeftDrawerToggle }) => {
             <SearchRounded stroke={1.5} size="1.3rem" />
           </Avatar>
         </ButtonBase>
+      </Tooltip>{" "}
+      <Tooltip title="About Us">
+        <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden", ml: 3 }}>
+          <Avatar
+            variant="rounded"
+            sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              transition: "all .2s ease-in-out",
+              background: theme.palette.primary.light,
+              color: theme.palette.primary.dark,
+              "&:hover": {
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
+              },
+            }}
+            onClick={() => {
+              navigate("/about");
+            }}
+            color="inherit"
+          >
+            <Info stroke={1.5} size="1.3rem" />
+          </Avatar>
+        </ButtonBase>
       </Tooltip>
       <Box sx={{ flexGrow: 0.1 }} />
-
       {/* notification & profile */}
       {/* <NotificationSection /> */}
       <ProfileSection />

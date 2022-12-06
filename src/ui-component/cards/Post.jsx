@@ -55,7 +55,7 @@ export default function Post({ post, uid, deltePostByID }) {
               >
                 <MenuItem
                   onClick={() => {
-                    navigate(`/post/${post?._id}`);
+                    navigate(`/edit/${post?._id}`);
                     handleClose();
                   }}
                 >
@@ -139,7 +139,11 @@ export default function Post({ post, uid, deltePostByID }) {
                 </>
               )}
             </Stack>
-            <Stack direction={"row"} sx={{ my: 2 }} spacing={1}>
+            <Stack
+              direction={"row"}
+              sx={{ my: 2, flexWrap: "wrap" }}
+              spacing={1}
+            >
               <Chip
                 icon={<PlaceIcon />}
                 label={post?.location}
@@ -159,28 +163,26 @@ export default function Post({ post, uid, deltePostByID }) {
             />
 
             <Box
-              sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
+              sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}
             >
-              <Box>
-                <Typography
-                  component="span"
-                  sx={{
-                    fontSize: "35px",
-                    fontWeight: "bold",
-                    color: "#000",
-                  }}
-                >
-                  ${Number(post.price)}.00
-                </Typography>
-                <Typography component="p" variant="body2">
-                  per adult
-                </Typography>
-              </Box>
-              <Box>
-                <Button sx={{}} variant="outlined">
-                  View Details
-                </Button>
-              </Box>
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: "bold",
+                  color: "#000",
+                }}
+              >
+                ${Number(post.price)}.00
+              </Typography>
+              <Button
+                onClick={() => {
+                  navigate(`/view/${post?._id}`);
+                }}
+                variant="outlined"
+              >
+                View Details
+              </Button>
             </Box>
           </Box>
         </Grid>
@@ -189,7 +191,7 @@ export default function Post({ post, uid, deltePostByID }) {
   );
 }
 
-const findColor = (color) => {
+export const findColor = (color) => {
   switch (color) {
     case 1:
       return "#ff4545";
