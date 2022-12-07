@@ -86,7 +86,7 @@ const Map = ({
         </Box>
       )} */}
       <GoogleMapReact
-        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
+        bootstrapURLKeys={{ key: "AIzaSyBalXCTucOUllRZc6zSbc2I_PM1dZ-Tjss" }}
         defaultCenter={{
           lat: 17.4227456,
           lng: 78.4990208,

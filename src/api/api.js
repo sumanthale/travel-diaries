@@ -1,6 +1,6 @@
 import axios from "axios";
 // const BASE_URL = "http://localhost:8080";
-const BASE_URL = "https://travel-backend-mul9.vercel.app";
+const BASE_URL = "https://careful-synapse-369206.uc.r.appspot.com";
 
 const USER_URL = BASE_URL + "/api/user";
 const POST_URL = BASE_URL + "/api/post";
@@ -155,7 +155,8 @@ export const getPlacesData = async (type, sw, ne) => {
           limit: 10,
         },
         headers: {
-          "x-rapidapi-key": process.env.REACT_APP_TRAVEL_API_KEY,
+          "x-rapidapi-key":
+            "8917545fd8msh93a437462ac10bcp130d52jsn3e7b9cf5167a",
           "x-rapidapi-host": "travel-advisor.p.rapidapi.com",
         },
       }
@@ -178,7 +179,7 @@ export const getWeatherData = async (lat, lng) => {
           params: {
             lat,
             lon: lng,
-            appid: process.env.REACT_APP_WEATHER_API_KEY,
+            appid: "4074649b5795010b64c72ad0b34845ef",
             units: "metric",
           },
         }
@@ -190,7 +191,6 @@ export const getWeatherData = async (lat, lng) => {
     console.log(error);
   }
 };
-
 export const checkout = async (quantity) => {
   fetch(`${BASE_URL}/create-checkout-session`, {
     method: "POST",

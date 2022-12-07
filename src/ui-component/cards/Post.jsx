@@ -150,12 +150,6 @@ export default function Post({ post, uid, deltePostByID }) {
                 variant="outlined"
                 color="secondary"
               />
-              <Chip
-                icon={<AccessTime />}
-                label="1 hour 30 min"
-                variant="outlined"
-                color="primary"
-              />
             </Stack>
             <div
               className="truncate"
@@ -163,7 +157,11 @@ export default function Post({ post, uid, deltePostByID }) {
             />
 
             <Box
-              sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}
+              sx={{
+                mt: 3,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
               <Typography
                 component="span"

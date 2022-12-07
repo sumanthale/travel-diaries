@@ -46,18 +46,7 @@ const Contact = () => {
     setPrice(newValue);
   };
   return (
-    <Box>
-      <Box className="contact">
-        <Typography
-          variant="h1"
-          sx={{
-            color: "#fff",
-            fontSize: "4rem",
-          }}
-        >
-          Welcome To Travel Diaries
-        </Typography>
-      </Box>
+    <>
       <Modal
         open={open}
         onClose={handleClose}
@@ -202,127 +191,135 @@ const Contact = () => {
           </Box>
         </Paper>
       </Modal>
-      <Grid container sx={{ p: 3 }} columnSpacing={2}>
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              textAlign: "center",
-              margin: "auto",
-            }}
-          >
-            <Typography variant="h1" sx={{}} color="primary" gutterBottom>
-              About Us!
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1rem",
-                textAlign: "left",
-              }}
-            >
-              Travel Diaries is a Professional travel, blog, trip, Platform.
-              Here we will provide you only interesting content, which you will
-              like very much. We're dedicated to providing you the best of
-              travel, blog, trip, , with a focus on dependability and Travel
-              Diaries brings people, passions and places together. We aim to
-              help make you a better traveller, from travel planning. We're
-              working to turn our passion for travel, blog, trip, into a booming
-              online website. We hope you enjoy our travel, blog, trip, as much
-              as we enjoy offering them to you
-            </Typography>
-            <Team />
-            <Box>
-              <Box></Box>
-              <Box className="donate">
-                <Typography
-                  variant="h2"
-                  color="white"
-                  sx={{
-                    my: 1,
-                  }}
-                >
-                  Buy us a coffee
-                </Typography>
-                <Slider
-                  getAriaLabel={() => "Price range"}
-                  value={price}
-                  onChange={handleChange}
-                  valueLabelDisplay="off"
-                  min={1}
-                  max={5}
-                />
-                <Button
-                  sx={{
-                    my: 1,
-                    color: "white",
-                    fontWeight: "bold",
-                    borderRadius: "100px",
-                  }}
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    checkout(price);
-                  }}
-                >
-                  Support ${price * 5}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h1" gutterBottom>
-            Contact Us
-          </Typography>
+      <Box className="contact">
+        <Typography
+          variant="h1"
+          sx={{
+            color: "#fff",
+            fontSize: "4rem",
+          }}
+        >
+          Welcome To Travel Diaries
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          textAlign: "center",
+          margin: "auto",
+        }}
+      >
+        <Typography
+          variant="h1"
+          sx={{
+            my: 2,
+          }}
+          color="primary"
+          gutterBottom
+        >
+          About Us!
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: "1rem",
+            textAlign: "justify",
+          }}
+        >
+          Travel Diaries is a Professional travel, blog, trip, Platform. Here we
+          will provide you only interesting content, which you will like very
+          much. We're dedicated to providing you the best of travel, blog, trip,
+          , with a focus on dependability and Travel Diaries brings people,
+          passions and places together. We aim to help make you a better
+          traveller, from travel planning. We're working to turn our passion for
+          travel, blog, trip, into a booming online website. We hope you enjoy
+          our travel, blog, trip, as much as we enjoy offering them to you
+        </Typography>
+        <Team />
+        <Box className="donate">
           <Typography
+            variant="h2"
+            color="white"
             sx={{
-              fontSize: "1rem",
+              my: 1,
             }}
-            component={"p"}
-            gutterBottom
           >
-            We love to hear from our users! If you have suggestions, comments or
-            ideas, please let us know. There are several ways to communicate
-            with us, and you should feel free to use whichever method you are
-            most comfortable with.
+            Buy us a coffee
           </Typography>
-          <Typography variant="h3" gutterBottom>
-            General Contact Information
-          </Typography>{" "}
-          <Typography gutterBottom>
-            Mailing address: Information about your mailing list 02494
-          </Typography>{" "}
-          <Typography gutterBottom>
-            General company phone number: Information about your company
-          </Typography>
-          <br />
-          <Box className="contact-box" sx={{ pt: 2 }}>
-            <Typography variant="h3" color="white" gutterBottom>
-              Message Us
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1rem",
-                my: 2,
-              }}
-              component={"p"}
-            >
-              Perhaps the easiest way to contact Us is by clicking on the button
-              below. If you would like a reply, please remember to include your
-              email address. We usually reply within two business days.
-            </Typography>
-            <p>
-              <button
-                className="btn btn-large btn-orange text-uppercase scrollto"
-                onClick={handleOpen}
-              >
-                Contact Us
-              </button>
-            </p>
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
+          <Slider
+            getAriaLabel={() => "Price range"}
+            value={price}
+            onChange={handleChange}
+            valueLabelDisplay="off"
+            min={1}
+            max={5}
+          />
+          <Button
+            sx={{
+              my: 1,
+              color: "white",
+              fontWeight: "bold",
+              borderRadius: "100px",
+            }}
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              checkout(price);
+            }}
+          >
+            Support ${price * 5}
+          </Button>
+        </Box>
+      </Box>
+      <Typography variant="h1" gutterBottom>
+        Contact Us
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: "1rem",
+        }}
+        component={"p"}
+        gutterBottom
+      >
+        We love to hear from our users! If you have suggestions, comments or
+        ideas, please let us know. There are several ways to communicate with
+        us, and you should feel free to use whichever method you are most
+        comfortable with.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        General Contact Information
+      </Typography>{" "}
+      <Typography gutterBottom>
+        Mailing address: Information about your mailing list 02494
+      </Typography>{" "}
+      <Typography gutterBottom>
+        General company phone number: Information about your company
+      </Typography>
+      <br />
+      <Box className="contact-box" sx={{ pt: 2 }}>
+        <Typography variant="h3" color="white" gutterBottom>
+          Message Us
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: "1rem",
+            my: 2,
+          }}
+          component={"p"}
+        >
+          Perhaps the easiest way to contact Us is by clicking on the button
+          below. If you would like a reply, please remember to include your
+          email address. We usually reply within two business days.
+        </Typography>
+        <p>
+          <button
+            className="btn btn-large btn-orange text-uppercase scrollto"
+            onClick={handleOpen}
+          >
+            Contact Us
+          </button>
+        </p>
+      </Box>
+    </>
   );
 };
 export default Contact;

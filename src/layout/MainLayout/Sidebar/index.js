@@ -63,7 +63,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         onClose={drawerToggle}
         sx={{
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: { xs: "70%", sm: drawerWidth },
             background: theme.palette.background.default,
             color: theme.palette.text.primary,
             borderRight: "none",

@@ -91,20 +91,6 @@ const ProfileSection = () => {
             lineHeight: 0,
           },
         }}
-        icon={
-          <Avatar
-            src={user?.photoUrl || ""}
-            sx={{
-              ...theme.typography.mediumAvatar,
-              margin: "8px 0 8px 8px !important",
-              cursor: "pointer",
-            }}
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            color="inherit"
-          />
-        }
         label={
           <IconSettings
             stroke={1.5}

@@ -30,9 +30,9 @@ const Team = () => {
                 alignItems: "center",
               }}
               gutterBottom
-              variant="h4"
+              variant="body1"
             >
-              <Email />: likhitha24reddy@gmail.com
+              likhitha24reddy@gmail.com
             </Typography>
             <Typography
               sx={{
@@ -66,9 +66,9 @@ const Team = () => {
                 alignItems: "center",
               }}
               gutterBottom
-              variant="h4"
+              variant="body1"
             >
-              <Email />: gurijalaprashanth4@gmail.com
+              gurijalaprashanth4@gmail.com
             </Typography>
             <Typography
               sx={{
@@ -104,9 +104,9 @@ const Team = () => {
                 alignItems: "center",
               }}
               gutterBottom
-              variant="h4"
+              variant="body1"
             >
-              <Email />: himanicapstone@gmail.com
+              himanicapstone@gmail.com
             </Typography>
             <Typography
               sx={{
@@ -140,9 +140,9 @@ const Team = () => {
                 alignItems: "center",
               }}
               gutterBottom
-              variant="h4"
+              variant="body1"
             >
-              <Email />: sumanth4023@gmail.com
+              sumanth4023@gmail.com
             </Typography>
             <Typography
               sx={{
